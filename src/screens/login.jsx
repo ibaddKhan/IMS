@@ -5,14 +5,14 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../config/firebaseconfig/firebaseconfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  let navigate = useNavigate()
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -23,20 +23,21 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-signInWithEmailAndPassword(auth, email, password)
-.then((userCredential) => {
-  const user = userCredential.user;
-  console.log(user);
-  if (user.uid=== "5jFgN6C2KOaYBJQTALATxJY944p2") {
-    console.log("Hello Admin");
-  }
-})
-.catch((error) => {
-  const errorCode = error.code;
-  const errorMessage = error.message;
-  console.log(errorMessage);
-});
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+        if (user.uid === "5jFgN6C2KOaYBJQTALATxJY944p2") {
+          console.log("Hello Admin");
+          navigate("adminpanel")
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage);
+      });
   };
 
   return (
@@ -55,7 +56,7 @@ signInWithEmailAndPassword(auth, email, password)
               Your Email
             </Typography>
             <Input
-            type="email"
+              type="email"
               size="lg"
               placeholder="name@mail.com"
               className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
