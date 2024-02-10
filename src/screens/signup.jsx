@@ -4,6 +4,8 @@ import {
   Input,
   Button,
   Typography,
+  Select,
+  Option
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
@@ -33,46 +35,134 @@ function Signup() {
         </Typography>
 
         <form
-          className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+          className="mt-8 mb-2 w-3/4 max-w-screen-lg sm:w-96"
           onSubmit={handleSubmit}
         >
-          <div className="mb-1 flex flex-col gap-6">
-            <Typography variant="h6" color="blue-gray" className="-mb-3">
-              Your Email
-            </Typography>
-            <Input
-            type="email"
-              size="lg"
-              placeholder="name@mail.com"
-              className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-              labelProps={{
-                className: "before:content-none after:content-none",
-              }}
-              value={email}
-              onChange={handleEmailChange}
-            />
-            <Typography variant="h6" color="blue-gray" className="-mb-3">
-              Password
-            </Typography>
-            <Input
-              type="password"
-              size="lg"
-              placeholder="********"
-              className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-              labelProps={{
-                className: "before:content-none after:content-none",
-              }}
-              value={password}
-              onChange={handlePasswordChange}
-            />
+          <div className="flex gap-7 justify-center">
+            <div className="mb-1 flex flex-col gap-6">
+              <Typography variant="h6" color="blue-gray" className="-mb-3">
+                Full Name
+              </Typography>
+              <Input
+                type="text"
+                size="lg"
+                placeholder="Full name"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                value={email}
+                onChange={handleEmailChange}
+              />
+              <Typography variant="h6" color="blue-gray" className="-mb-3">
+                Email
+              </Typography>
+              <Input
+                type="email"
+                size="lg"
+                placeholder="name@mail.com"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                value={email}
+                onChange={handleEmailChange}
+              />
+
+              <Typography variant="h6" color="blue-gray" className="-mb-3">
+                Password
+              </Typography>
+              <Input
+                type="password"
+                size="lg"
+                placeholder="********"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              <Typography variant="h6" color="blue-gray" className="-mb-3">
+                Address
+              </Typography>
+              <Input
+                type="email"
+                size="lg"
+                placeholder="Address"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                value={email}
+                onChange={handleEmailChange}
+              />
+            </div>
+            <div className="mb-1 flex flex-col gap-6">
+              <Typography variant="h6" color="blue-gray" className="-mb-3">
+                Select Course
+              </Typography>
+              <div className="w-32">
+                <Select label="No course selected">
+                  <Option>Material Tailwind HTML</Option>
+                  <Option>Material Tailwind React</Option>
+                  <Option>Material Tailwind Vue</Option>
+                  <Option>Material Tailwind Angular</Option>
+                  <Option>Material Tailwind Svelte</Option>
+                </Select>
+              </div>
+              <Typography variant="h6" color="blue-gray" className="-mb-3">
+                Email
+              </Typography>
+              <Input
+                type="email"
+                size="lg"
+                placeholder="name@mail.com"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                value={email}
+                onChange={handleEmailChange}
+              />
+
+              <Typography variant="h6" color="blue-gray" className="-mb-3">
+                Password
+              </Typography>
+              <Input
+                type="password"
+                size="lg"
+                placeholder="********"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              <Typography variant="h6" color="blue-gray" className="-mb-3">
+                Address
+              </Typography>
+              <Input
+                type="email"
+                size="lg"
+                placeholder="Address"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                value={email}
+                onChange={handleEmailChange}
+              />
+            </div>
           </div>
           <Button type="submit" className="mt-6" fullWidth>
-            Sign In
+            Sign Up
           </Button>
           <Typography color="gray" className="mt-4 text-center font-normal">
             Already have an account?{" "}
             <Link to="/" className="font-medium text-gray-900">
-              Sign Up
+              Sign In
             </Link>
           </Typography>
         </form>
