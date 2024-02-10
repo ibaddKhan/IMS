@@ -9,8 +9,11 @@ import { useNavigate } from 'react-router-dom';
 const Allcourses = () => {
   let navigate = useNavigate();
   onAuthStateChanged(auth, (user) => {
-    if (!user || user.uid !== "5jFgN6C2KOaYBJQTALATxJY944p2") {
+    if (!user) {
       navigate('/');
+    }
+    if (user.uid !== "5jFgN6C2KOaYBJQTALATxJY944p2") {
+      navigate('/studentpage');
       return;
     }
   });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useCountries } from "use-react-countries";
 import {
@@ -15,8 +15,11 @@ import {
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { collection, getDoc, getDocs } from "firebase/firestore";
+import { db } from "../config/firebaseconfig/firebaseconfig";
 
 function Signup() {
+  
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +28,9 @@ function Signup() {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-
+  useEffect(() => {
+    handleSignup()
+  }, [selectedCourse])
   const { countries } = useCountries();
   const [country, setCountry] = React.useState(0);
   const { name, flags, countryCallingCode } = countries[country];
@@ -61,7 +66,20 @@ function Signup() {
   const handlePhoneNumberChange = (value) => {
     setPhoneNumber(value);
   };
-
+  let [arr, setArr] = useState([])
+  async function handleSignup() {
+    try {
+      const querySnapshot = await getDocs(collection(db, "courses"));
+      const coursesData = [];
+      querySnapshot.forEach((doc) => {
+        coursesData.push({ id: doc.id, ...doc.data() });
+      });
+      setArr(coursesData);
+      console.log(arr);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -175,11 +193,13 @@ function Signup() {
               </Typography>
               <div className="w-full lg:w-64">
                 <Select label="Course Selected" onChange={(value) => handleCourseChange(value)}>
-                  <Option value="Material Tailwind HTML">Material Tailwind HTML</Option>
-                  <Option value="Material Tailwind React">Material Tailwind React</Option>
-                  <Option value="Material Tailwind Vue">Material Tailwind Vue</Option>
-                  <Option value="Material Tailwind Angular">Material Tailwind Angular</Option>
-                  <Option value="Material Tailwind Svelte">Material Tailwind Svelte</Option>
+               {
+                arr.map((course) => {
+                  return <Option value={course.courseName}>{course.courseName}</Option>
+
+                })
+               }
+               
                 </Select>
               </div>
             </div>
@@ -256,11 +276,11 @@ function Signup() {
             </div>
           </div>
 
-         <div className="flex justify-center">
-         <Button  type="submit" className="mt-6 w-2/3 text-sm" >
-            Sign Up
-          </Button>
-         </div>
+          <div className="flex justify-center">
+            <Button type="submit" className="mt-6 w-2/3 text-sm" >
+              Sign Up
+            </Button>
+          </div>
 
           <Typography color="gray" className="mt-4 text-center font-normal">
             Already have an account?{" "}
