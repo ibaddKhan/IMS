@@ -5,6 +5,7 @@ import Login from '../../screens/login'
 import Adminpanel from '../../screens/adminpanel'
 import Allcourses from '../../screens/allcourses'
 import AllStudent from '../../screens/allStudent'
+import StudentsPage from '../../screens/studentsPage'
 
 const Routers = () => {
     return (
@@ -16,6 +17,7 @@ const Routers = () => {
                     <Route path='adminpanel' element={<Adminpanel />} />
                     <Route path='allCourses' element={<Allcourses />} />
                     <Route path='allStudents' element={<AllStudent />} />
+                    <Route path='studentsPage' element={<StudentsPage />} />
                 </Routes>
 
             </BrowserRouter>

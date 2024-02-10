@@ -6,6 +6,7 @@ module.exports = withMT({
     fontFamily: {
       sans: ["Poppins", "sans-serif"],
     },
+  
     extend: {},
   },
   plugins: [],

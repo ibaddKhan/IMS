@@ -11,14 +11,16 @@ import {
   MenuHandler,
   MenuList,
   MenuItem,
-  Option
+  Option,
+  input
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db, auth } from "../config/firebaseconfig/firebaseconfig";
+
 function Signup() {
 
   const [fullName, setFullName] = useState("");
@@ -35,6 +37,7 @@ function Signup() {
   const { countries } = useCountries();
   const [country, setCountry] = React.useState(0);
   const { name, flags, countryCallingCode } = countries[country];
+  let nav=useNavigate()
 
   const handleFullNameChange = (e) => {
     setFullName(e.target.value);
@@ -80,10 +83,26 @@ function Signup() {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }
-  const handleSubmit = (e) => {
+  }const handleSubmit = (e) => {
     e.preventDefault();
-
+    if (
+      !fullName ||
+      !email ||
+      !password ||
+      !address ||
+      !fatherName ||
+      !selectedCourse ||
+      !selectedGender ||
+      !phoneNumber
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please fill in all the required fields!",
+      });
+      return; 
+    }
+  
     const formData = {
       fullName,
       email,
@@ -94,12 +113,15 @@ function Signup() {
       selectedGender,
       phoneNumber
     };
+  
     console.log(formData);
-
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
         console.log(user);
+        updateProfile(auth.currentUser, {
+          displayName: fullName,
+        })
         const docRef = await addDoc(collection(db, "students"), formData);
         console.log("Document written with ID: ", docRef.id);
         Swal.fire({
@@ -109,6 +131,7 @@ function Signup() {
           showConfirmButton: false,
           timer: 1500,
         });
+        nav("/studentsPage")
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -121,8 +144,10 @@ function Signup() {
         });
       });
   };
+  
 
   return (
+    
     <div className="flex justify-center items-center mt-20">
       <Card color="transparent" className="p-10" shadow={true}>
         <Typography variant="h2" className="text-center" color="blue-gray">
@@ -221,7 +246,7 @@ function Signup() {
                 <Select label="Course Selected" onChange={(value) => handleCourseChange(value)}>
                   {
                     arr.map((course) => {
-                      return <Option value={course.courseName}>{course.courseName}</Option>
+                      return <Option key={course.id} value={course.courseName}>{course.courseName}</Option>
 
                     })
                   }
@@ -301,7 +326,13 @@ function Signup() {
               </div>
             </div>
           </div>
+          <Button  variant="outlined" className="border-gray-400">
+            <label >
+              Upload Image
+              <input required type="file" hidden accept="image/*" />
+            </label>
 
+          </Button>
           <div className="flex justify-center">
             <Button type="submit" className="mt-6 w-2/3 text-sm" >
               Sign Up

@@ -44,10 +44,12 @@ function Login() {
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Logging In",
+          title: "Logging In as "+user.displayName,
           showConfirmButton: false,
           timer: 1500,
         });
+        navigate("studentsPage")
+
       })
       .catch((error) => {
         const errorCode = error.code;
