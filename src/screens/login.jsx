@@ -8,6 +8,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../config/firebaseconfig/firebaseconfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import Swal from 'sweetalert2';
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -30,13 +31,35 @@ function Login() {
         console.log(user);
         if (user.uid === "5jFgN6C2KOaYBJQTALATxJY944p2") {
           console.log("Hello Admin");
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Hey Admin",
+            showConfirmButton: false,
+            timer: 1500,
+          });
           navigate("adminpanel")
+          return
         }
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Logging In",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage);
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: errorMessage,
+          showConfirmButton: false,
+          timer: 1500,
+        });
       });
   };
 

@@ -14,6 +14,7 @@ import {
   Option
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 function Signup() {
   const [fullName, setFullName] = useState("");
@@ -239,7 +240,7 @@ function Signup() {
                   </MenuList>
                 </Menu>
                 <Input
-                  type="tel"
+                  type="number"
                   placeholder="Mobile Number"
                   className="rounded-l-none !border-t-blue-gray-200 focus:!border-t-gray-900"
                   labelProps={{
