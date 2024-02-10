@@ -10,11 +10,20 @@ import {
   collection,
   addDoc,
 } from "firebase/firestore";
-import { db } from "../config/firebaseconfig/firebaseconfig";
+import { auth, db } from "../config/firebaseconfig/firebaseconfig";
 import Swal from 'sweetalert2';
 import Navbar from "../components/navbar";
+import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
 
 function Adminpanel() {
+  let navigate =useNavigate()
+  onAuthStateChanged(auth, (user) => {
+    if (!user ||user.uid!=="5jFgN6C2KOaYBJQTALATxJY944p2") {
+      navigate('/')
+      return
+    }
+  })
   const [teacherName, setTeacherName] = useState("");
   const [courseName, setCourseName] = useState("");
   const [selectedType, setSelectedType] = useState("MWF");
