@@ -15,11 +15,12 @@ import {
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
-import { collection, getDoc, getDocs } from "firebase/firestore";
-import { db } from "../config/firebaseconfig/firebaseconfig";
-
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { addDoc, collection, getDocs } from "firebase/firestore";
+import { db, auth } from "../config/firebaseconfig/firebaseconfig";
 function Signup() {
-  
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -94,6 +95,31 @@ function Signup() {
       phoneNumber
     };
     console.log(formData);
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+        const docRef = await addDoc(collection(db, "students"), formData);
+        console.log("Document written with ID: ", docRef.id);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Logging In as " + fullName,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: errorMessage,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
   };
 
   return (
@@ -193,13 +219,13 @@ function Signup() {
               </Typography>
               <div className="w-full lg:w-64">
                 <Select label="Course Selected" onChange={(value) => handleCourseChange(value)}>
-               {
-                arr.map((course) => {
-                  return <Option value={course.courseName}>{course.courseName}</Option>
+                  {
+                    arr.map((course) => {
+                      return <Option value={course.courseName}>{course.courseName}</Option>
 
-                })
-               }
-               
+                    })
+                  }
+
                 </Select>
               </div>
             </div>
