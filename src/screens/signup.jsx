@@ -12,7 +12,8 @@ import {
   MenuList,
   MenuItem,
   Option,
-  input
+  input,
+  Radio
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
@@ -33,7 +34,7 @@ function Signup() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [noLoader, setLoader] = useState(false);
-
+  const [selectedType, setSelectedType] = useState("TTF");
   useEffect(() => {
     handleSignup();
   }, [selectedCourse]);
@@ -79,6 +80,11 @@ function Signup() {
     const imageFile = e.target.files[0];
     setSelectedImage(imageFile);
   };
+  
+  const handleTypeChange = (value) => {
+    setSelectedType(value);
+  };
+
 
   let [arr, setArr] = useState([]);
 
@@ -121,17 +127,20 @@ function Signup() {
       const user = userCredential.user;
   
       const uid = user.uid;
-      const formData = {
-        fullName,
-        uid,
-        email,
-        password,
-        address,
-        fatherName,
-        selectedCourse,
-        selectedGender,
-        phoneNumber,
-      };
+     
+    const formData = {
+      fullName,
+      uid,
+      email,
+      password,
+      address,
+      fatherName,
+      selectedCourse,
+      selectedGender,
+      phoneNumber,
+      days:selectedType, 
+    };
+
   
       setLoader(!noLoader);
   
@@ -352,7 +361,7 @@ function Signup() {
               </div>
             </div>
           </div>
-          <div className="mb-4">
+          <div className="mb-4 flex flex-col flex-wrap">
             <label htmlFor="image" className="text-sm text-gray-700">
               Upload Image
             </label>
@@ -363,6 +372,30 @@ function Signup() {
               onChange={handleImageChange}
               className="mt-1 block w-full"
             />
+              <div className="flex gap-10">
+                <Radio
+                  name="type"
+                  label="TTF"
+                  value="TTF"
+                  checked={selectedType === "TTF"}
+                  onChange={() => handleTypeChange("TTF")}
+                />
+                <Radio
+                  name="type"
+                  label="MWF"
+                  value="MWF"
+                  checked={selectedType === "MWF"}
+                  onChange={() => handleTypeChange("MWF")}
+                />
+                <Radio
+                  name="type"
+                  label="FSS"
+                  value="FSS"
+                  checked={selectedType === "FSS"}
+                  onChange={() => handleTypeChange("FSS")}
+                  disabled
+                />
+              </div>
           </div>
           <div className="flex justify-center">
             <Button type="submit" loading={noLoader ? true : null} className="mt-6 w-2/3 px-auto text-center text-sm" >
