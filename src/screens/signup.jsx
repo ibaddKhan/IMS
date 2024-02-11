@@ -94,10 +94,9 @@ function Signup() {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }
-  const handleSubmit = async (e) => {
+  }const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (
       !fullName ||
       !email ||
@@ -116,16 +115,15 @@ function Signup() {
       });
       return;
     }
-
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log(user);
-
+  
       const uid = user.uid;
       const formData = {
         fullName,
-        user,
+        uid,
         email,
         password,
         address,
@@ -134,25 +132,24 @@ function Signup() {
         selectedGender,
         phoneNumber,
       };
-
-      console.log(formData);
+  
       setLoader(!noLoader);
-
+  
       const imageRef = ref(storage, `userImages/${uid}/${selectedImage.name}`);
       await uploadBytes(imageRef, selectedImage);
-
+  
       const imageUrl = await getDownloadURL(imageRef);
-
+  
       formData.imageUrl = imageUrl;
-
+  
       await updateProfile(auth.currentUser, {
         displayName: fullName,
         photoURL: imageUrl,
       });
-
+  
       const docRef = await addDoc(collection(db, "students"), formData);
       console.log("Document written with ID: ", docRef.id);
-
+  
       Swal.fire({
         position: "center",
         icon: "success",
@@ -160,10 +157,11 @@ function Signup() {
         showConfirmButton: false,
         timer: 1500,
       });
-
+  
       nav("/studentsPage");
     } catch (error) {
       const errorMessage = error.message;
+      console.log(errorMessage);
       Swal.fire({
         position: "center",
         icon: "error",
@@ -173,7 +171,7 @@ function Signup() {
       });
     }
   };
-
+  
   return (
 
     <div className="flex justify-center items-center mt-20">
