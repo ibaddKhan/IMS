@@ -1,12 +1,17 @@
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { db, auth } from "../config/firebaseconfig/firebaseconfig";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { Button } from '@material-tailwind/react';
+import StdNavbar from '../components/navbarforstd';
 
 function StudentPage() {
   const [user, setUser] = useState(null);
   const [studentDetails, setStudentDetails] = useState(null);
   const [errorText, setErrorText] = useState(null);
+  let navigate = useNavigate();
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -39,19 +44,19 @@ function StudentPage() {
 
   return (
     <div className="flex min-h-screen w-screen items-center justify-center bg-blue-gray-100">
-
-      <div className="bg-white p-8 rounded-lg shadow-md w-screen max-w-screen-md ">
-      <h2 className="text-2xl text-center mb-6 font-semibold">Student Details</h2>
-        <div className="flex justify-between">
-          <h1 className="text-2xl mt-5">Welcome, {user?.displayName}!</h1>
-          <div className="">
-            <img src={studentDetails?.imageUrl} className="mb-5" width={120} alt="" />
-            
-
+      <StdNavbar  />
+      <div className="bg-white p-8 rounded-lg shadow-md w-screen max-w-screen-md">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-2xl text-center mb-6 font-semibold">Student Details</h2>
+            <h1 className="text-2xl mt-5">Welcome, {user?.displayName}!</h1>
           </div>
-
+          <div className="flex items-center">
+            <img src={studentDetails?.imageUrl} className="mb-5" width={120} alt="" />
+          </div>
         </div>
-        {studentDetails ? (
+        {studentDetails ? (<>
+
           <table className="w-full border-collapse border border-blue-gray-300">
             <tbody>
               <tr>
@@ -83,9 +88,12 @@ function StudentPage() {
                 <td className="py-2 px-4 border text-center">{studentDetails.phoneNumber}</td>
               </tr>
             </tbody>
-          </table>
+          </table></>
         ) : (
-          <h1 className="text-red-500 text-xl mt-6">{errorText}!!</h1>
+          <>
+
+            <h1 className="text-red-500 text-xl mt-6">{errorText}!!</h1>
+          </>
         )}
       </div>
     </div>
