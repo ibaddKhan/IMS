@@ -138,22 +138,18 @@ function Signup() {
       console.log(formData);
       setLoader(!noLoader);
 
-      // Upload image to Firebase Storage
       const imageRef = ref(storage, `userImages/${uid}/${selectedImage.name}`);
       await uploadBytes(imageRef, selectedImage);
 
-      // Get the download URL
       const imageUrl = await getDownloadURL(imageRef);
 
-      // Add the image URL to the formData
       formData.imageUrl = imageUrl;
 
-      // Update user profile with display name
       await updateProfile(auth.currentUser, {
         displayName: fullName,
+        photoURL: imageUrl,
       });
 
-      // Add user data to Firestore
       const docRef = await addDoc(collection(db, "students"), formData);
       console.log("Document written with ID: ", docRef.id);
 
