@@ -85,7 +85,7 @@ function StudentPage() {
             </tbody>
           </table>
         ) : (
-          <h1 className="text-red-500">{errorText}</h1>
+          <h1 className="text-red-500 text-xl mt-6">{errorText}!!</h1>
         )}
       </div>
     </div>
