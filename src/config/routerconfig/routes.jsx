@@ -6,6 +6,7 @@ import Adminpanel from '../../screens/adminpanel'
 import Allcourses from '../../screens/allcourses'
 import AllStudent from '../../screens/allStudent'
 import StudentsPage from '../../screens/studentsPage'
+import SingleStudent from '../../screens/singleStudent'
 
 const Routers = () => {
     return (
@@ -18,6 +19,7 @@ const Routers = () => {
                     <Route path='allCourses' element={<Allcourses />} />
                     <Route path='allStudents' element={<AllStudent />} />
                     <Route path='studentsPage' element={<StudentsPage />} />
+                    <Route path='singleStudent' element={<SingleStudent />} />
                 </Routes>
 
             </BrowserRouter>
