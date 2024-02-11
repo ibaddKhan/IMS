@@ -19,10 +19,10 @@ import Swal from 'sweetalert2';
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { addDoc, collection, getDocs } from "firebase/firestore";
-import { db, auth } from "../config/firebaseconfig/firebaseconfig";
+import { db, auth, storage } from "../config/firebaseconfig/firebaseconfig";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 function Signup() {
-
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,13 +31,17 @@ function Signup() {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [noLoader, setLoader] = useState(false);
+
   useEffect(() => {
-    handleSignup()
-  }, [selectedCourse])
+    handleSignup();
+  }, [selectedCourse]);
+
   const { countries } = useCountries();
   const [country, setCountry] = React.useState(0);
   const { name, flags, countryCallingCode } = countries[country];
-  let nav=useNavigate()
+  let nav = useNavigate();
 
   const handleFullNameChange = (e) => {
     setFullName(e.target.value);
@@ -70,7 +74,14 @@ function Signup() {
   const handlePhoneNumberChange = (value) => {
     setPhoneNumber(value);
   };
-  let [arr, setArr] = useState([])
+
+  const handleImageChange = (e) => {
+    const imageFile = e.target.files[0];
+    setSelectedImage(imageFile);
+  };
+
+  let [arr, setArr] = useState([]);
+
   async function handleSignup() {
     try {
       const querySnapshot = await getDocs(collection(db, "courses"));
@@ -83,8 +94,10 @@ function Signup() {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }const handleSubmit = (e) => {
+  }
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (
       !fullName ||
       !email ||
@@ -93,61 +106,80 @@ function Signup() {
       !fatherName ||
       !selectedCourse ||
       !selectedGender ||
-      !phoneNumber
+      !phoneNumber ||
+      !selectedImage
     ) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "Please fill in all the required fields!",
       });
-      return; 
+      return;
     }
-  
-    const formData = {
-      fullName,
-      email,
-      password,
-      address,
-      fatherName,
-      selectedCourse,
-      selectedGender,
-      phoneNumber
-    };
-  
-    console.log(formData);
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-        updateProfile(auth.currentUser, {
-          displayName: fullName,
-        })
-        const docRef = await addDoc(collection(db, "students"), formData);
-        console.log("Document written with ID: ", docRef.id);
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Logging In as " + fullName,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        nav("/studentsPage")
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: errorMessage,
-          showConfirmButton: false,
-          timer: 1500,
-        });
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log(user);
+
+      const uid = user.uid;
+      const formData = {
+        fullName,
+        uid,
+        email,
+        password,
+        address,
+        fatherName,
+        selectedCourse,
+        selectedGender,
+        phoneNumber,
+      };
+
+      console.log(formData);
+      setLoader(!noLoader);
+
+      // Upload image to Firebase Storage
+      const imageRef = ref(storage, `userImages/${uid}/${selectedImage.name}`);
+      await uploadBytes(imageRef, selectedImage);
+
+      // Get the download URL
+      const imageUrl = await getDownloadURL(imageRef);
+
+      // Add the image URL to the formData
+      formData.imageUrl = imageUrl;
+
+      // Update user profile with display name
+      await updateProfile(auth.currentUser, {
+        displayName: fullName,
       });
+
+      // Add user data to Firestore
+      const docRef = await addDoc(collection(db, "students"), formData);
+      console.log("Document written with ID: ", docRef.id);
+
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Logging In as " + fullName,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      nav("/studentsPage");
+    } catch (error) {
+      const errorMessage = error.message;
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: errorMessage,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
   };
-  
 
   return (
-    
+
     <div className="flex justify-center items-center mt-20">
       <Card color="transparent" className="p-10" shadow={true}>
         <Typography variant="h2" className="text-center" color="blue-gray">
@@ -326,15 +358,20 @@ function Signup() {
               </div>
             </div>
           </div>
-          <Button  variant="outlined" className="border-gray-400">
-            <label >
+          <div className="mb-4">
+            <label htmlFor="image" className="text-sm text-gray-700">
               Upload Image
-              <input required type="file" hidden accept="image/*" />
             </label>
-
-          </Button>
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="mt-1 block w-full"
+            />
+          </div>
           <div className="flex justify-center">
-            <Button type="submit" className="mt-6 w-2/3 text-sm" >
+            <Button type="submit" loading={noLoader ? true : null} className="mt-6 w-2/3 px-auto text-center text-sm" >
               Sign Up
             </Button>
           </div>
