@@ -39,7 +39,7 @@ function Signup() {
   }, [selectedCourse]);
 
   const { countries } = useCountries();
-  const [country, setCountry] = React.useState(0);
+  const [country, setCountry] = React.useState(118);
   const { name, flags, countryCallingCode } = countries[country];
   let nav = useNavigate();
 
@@ -375,7 +375,7 @@ function Signup() {
             <Link to="/" className="font-medium text-gray-900">
               Sign In
             </Link>
-          </Typography>
+          </Typography> 
         </form>
       </Card>
     </div>
