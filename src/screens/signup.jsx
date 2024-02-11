@@ -125,7 +125,7 @@ function Signup() {
       const uid = user.uid;
       const formData = {
         fullName,
-        uid,
+        user,
         email,
         password,
         address,
