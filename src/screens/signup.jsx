@@ -129,7 +129,7 @@ function Signup() {
       const user = userCredential.user;
   
       const uid = user.uid;
-     nav("/studentsPage")
+     
     const formData = {
       fullName,
       uid,
@@ -167,7 +167,7 @@ function Signup() {
         showConfirmButton: false,
         timer: 1500,
       });
-  
+  nav("/studentsPage")
     } catch (error) {
       const errorMessage = error.message;
       console.log(errorMessage);
