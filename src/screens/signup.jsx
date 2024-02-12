@@ -166,12 +166,9 @@ function Signup() {
         title: "Logging In as " + fullName,
         showConfirmButton: false,
         timer: 1500,
-      }).then(()=>{
-        setTimeout(() => {
-  nav("/studentsPage")
-          
-}, "2400");
       })
+
+      console.log("working")
     } catch (error) {
       const errorMessage = error.message;
       console.log(errorMessage);
