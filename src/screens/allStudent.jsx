@@ -1,18 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db, auth } from "../config/firebaseconfig/firebaseconfig";
 import { deleteUser } from "firebase/auth";
 import Navbar from "../components/navbar";
 import Swal from 'sweetalert2';
-
+import UserContext from '../context/userContext';
+import { useNavigate,Link } from "react-router-dom";
 
 function allStudents() {
+  let { uid, isUser, setIsUser, singleUid, setSingleUid } = useContext(UserContext);
+  let nav = useNavigate();
   const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    if (uid !== "5jFgN6C2KOaYBJQTALATxJY944p2") {
+      nav("/");
+    }
+  }, [uid, nav]);
 
   useEffect(() => {
     fetchData();
   }, []);
-
   const fetchData = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "students"));
@@ -42,7 +50,11 @@ function allStudents() {
       console.log(error);
     }
   };
-
+  async function handleSinglePage(oneUid) {
+    await setSingleUid(oneUid)
+    await setIsUser(true)
+    console.log(oneUid);
+  }
   return (
     <>
 
@@ -60,12 +72,14 @@ function allStudents() {
                 </div>
               </div>
               <div className="flex gap-4">
-                <button
-                  onClick={() => handleDelete(student.id)}
+              <Link to="/singleStudent">
+              <button
+                  onClick={() => handleSinglePage(student.id)}
                   className="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                 >
                   See Details
                 </button>
+              </Link>
                 <button
                   onClick={() => handleDelete(student.id)}
                   className="mt-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
