@@ -1,9 +1,6 @@
-import React, { useContext } from 'react'
-import UserContext from '../context/userContext';
+import React from 'react'
 
 const SingleStudent = () => {
-  let { uid, isUser, setIsUser,singleUid,setSingleUid } = useContext(UserContext);
-  console.log(singleUid);
   return (
     <div>SingleStudent</div>
   )
