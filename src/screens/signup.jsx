@@ -166,8 +166,12 @@ function Signup() {
         title: "Logging In as " + fullName,
         showConfirmButton: false,
         timer: 1500,
-      });
+      }).then(()=>{
+        setTimeout(() => {
   nav("/studentsPage")
+          
+}, "2400");
+      })
     } catch (error) {
       const errorMessage = error.message;
       console.log(errorMessage);
