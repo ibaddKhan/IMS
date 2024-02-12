@@ -25,11 +25,10 @@ function StudentPage() {
         console.log(studentData);
       } else {
         console.error("Student details not found");
-        // Handle the case where student details are not found
       }
     } catch (error) {
       console.error("Error fetching student details:", error);
-      // Handle the error case
+      
     }
   }
 

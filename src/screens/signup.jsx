@@ -123,11 +123,13 @@ function Signup() {
     }
   
     try {
+      setLoader(!noLoader);
+
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
   
       const uid = user.uid;
-     
+     nav("/studentsPage")
     const formData = {
       fullName,
       uid,
@@ -142,9 +144,8 @@ function Signup() {
     };
 
   
-      setLoader(!noLoader);
   
-      const imageRef = ref(storage, `userImages/${uid}/${selectedImage.name}`);
+      const imageRef = ref(storage, email);
       await uploadBytes(imageRef, selectedImage);
   
       const imageUrl = await getDownloadURL(imageRef);
@@ -167,10 +168,11 @@ function Signup() {
         timer: 1500,
       });
   
-      nav("/studentsPage");
     } catch (error) {
       const errorMessage = error.message;
       console.log(errorMessage);
+      setLoader(noLoader);
+
       Swal.fire({
         position: "center",
         icon: "error",
