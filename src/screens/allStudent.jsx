@@ -50,7 +50,8 @@ function allStudents() {
     }
   };
   async function handleSinglePage(oneUid) {
-    nav("/SingleStudent")
+    localStorage.setItem("singleUid", oneUid);
+    nav(`/SingleStudent/${oneUid}`)
   }
   return (
     <>
@@ -70,7 +71,7 @@ function allStudents() {
               </div>
               <div className="flex gap-4">
                   <button
-                    onClick={() => handleSinglePage(student.id)}
+                    onClick={() => handleSinglePage(student.uid)}
                     className="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                   >
                     See Details

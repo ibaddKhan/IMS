@@ -19,7 +19,7 @@ const Routers = () => {
                 <Route path="allCourses" element={<Allcourses />} />
                 <Route path="allStudents" element={<AllStudent />} />
                 <Route path="studentsPage" element={<StudentsPage />} />
-                <Route path="singleStudent" element={<SingleStudent />} />
+                <Route path="singleStudent/:id" element={<SingleStudent />} />
             </Routes>
         </BrowserRouter>
     );
