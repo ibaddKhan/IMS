@@ -80,7 +80,7 @@ function Signup() {
     const imageFile = e.target.files[0];
     setSelectedImage(imageFile);
   };
-  
+
   const handleTypeChange = (value) => {
     setSelectedType(value);
   };
@@ -100,9 +100,9 @@ function Signup() {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }const handleSubmit = async (e) => {
+  } const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (
       !fullName ||
       !email ||
@@ -121,53 +121,57 @@ function Signup() {
       });
       return;
     }
-  
+
     try {
       setLoader(!noLoader);
 
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-  
-      const uid = user.uid;
-     nav("/studentsPage")
-    const formData = {
-      fullName,
-      uid,
-      email,
-      password,
-      address,
-      fatherName,
-      selectedCourse,
-      selectedGender,
-      phoneNumber,
-      days:selectedType, 
-    };
 
-  
-  
+      const uid = user.uid;
+      const formData = {
+        fullName,
+        uid,
+        email,
+        password,
+        address,
+        fatherName,
+        selectedCourse,
+        selectedGender,
+        phoneNumber,
+        days: selectedType,
+      };
+
+
+
       const imageRef = ref(storage, email);
       await uploadBytes(imageRef, selectedImage);
-  
+
       const imageUrl = await getDownloadURL(imageRef);
-  
+
       formData.imageUrl = imageUrl;
-  
+
       await updateProfile(auth.currentUser, {
         displayName: fullName,
         photoURL: imageUrl,
       });
-  
+
       const docRef = await addDoc(collection(db, "students"), formData);
       console.log("Document written with ID: ", docRef.id);
-  
+
       Swal.fire({
         position: "center",
         icon: "success",
         title: "Logging In as " + fullName,
         showConfirmButton: false,
         timer: 1500,
-      });
-  
+      }).then(() => {
+        setTimeout(() => {
+          nav("/studentsPage")
+
+        }, 1200);
+      })
+
     } catch (error) {
       const errorMessage = error.message;
       console.log(errorMessage);
@@ -182,7 +186,7 @@ function Signup() {
       });
     }
   };
-  
+
   return (
 
     <div className="flex justify-center items-center mt-20">
@@ -374,30 +378,30 @@ function Signup() {
               onChange={handleImageChange}
               className="mt-1 block w-full"
             />
-              <div className="flex gap-10">
-                <Radio
-                  name="type"
-                  label="TTF"
-                  value="TTF"
-                  checked={selectedType === "TTF"}
-                  onChange={() => handleTypeChange("TTF")}
-                />
-                <Radio
-                  name="type"
-                  label="MWF"
-                  value="MWF"
-                  checked={selectedType === "MWF"}
-                  onChange={() => handleTypeChange("MWF")}
-                />
-                <Radio
-                  name="type"
-                  label="FSS"
-                  value="FSS"
-                  checked={selectedType === "FSS"}
-                  onChange={() => handleTypeChange("FSS")}
-                  disabled
-                />
-              </div>
+            <div className="flex gap-10">
+              <Radio
+                name="type"
+                label="TTF"
+                value="TTF"
+                checked={selectedType === "TTF"}
+                onChange={() => handleTypeChange("TTF")}
+              />
+              <Radio
+                name="type"
+                label="MWF"
+                value="MWF"
+                checked={selectedType === "MWF"}
+                onChange={() => handleTypeChange("MWF")}
+              />
+              <Radio
+                name="type"
+                label="FSS"
+                value="FSS"
+                checked={selectedType === "FSS"}
+                onChange={() => handleTypeChange("FSS")}
+                disabled
+              />
+            </div>
           </div>
           <div className="flex justify-center">
             <Button type="submit" loading={noLoader ? true : null} className="mt-6 w-2/3 px-auto text-center text-sm" >
@@ -410,7 +414,7 @@ function Signup() {
             <Link to="/" className="font-medium text-gray-900">
               Sign In
             </Link>
-          </Typography> 
+          </Typography>
         </form>
       </Card>
     </div>
